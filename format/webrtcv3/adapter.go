@@ -50,7 +50,13 @@ func NewMuxer(options Options) *Muxer {
 func (element *Muxer) NewPeerConnection(configuration webrtc.Configuration) (*webrtc.PeerConnection, error) {
 	if len(element.Options.ICEServers) > 0 {
 		log.Println("Set ICEServers", element.Options.ICEServers)
-		configuration.ICEServers = append(configuration.ICEServers, webrtc.ICEServer{URLs: element.Options.ICEServers})
+		configuration.ICEServers = append(configuration.ICEServers, webrtc.ICEServer{
+			URLs:       element.Options.ICEServers,
+			Username:   "myUsername",
+			Credential: "myPassword",
+			// TODO also support webrtc.ICECredentialTypeOauth
+			CredentialType: webrtc.ICECredentialTypePassword,
+		})
 	}
 	m := &webrtc.MediaEngine{}
 	if err := m.RegisterDefaultCodecs(); err != nil {
